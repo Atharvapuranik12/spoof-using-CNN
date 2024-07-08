@@ -6,13 +6,12 @@ from tensorflow.keras.models import load_model
 app = Flask(__name__)
 
 # Load the trained model
-model_path = 'C:/Users/ss/OneDrive/Desktop/spoof/spoof_detection_model.h5'
+model_path = 'spoof_detection_model.h5'  
 model = load_model(model_path)
 
 # Parameters
 img_height = 224
 img_width = 224
-
 
 # Function to preprocess the image
 def preprocess_image(image):
@@ -20,7 +19,6 @@ def preprocess_image(image):
     image = image.astype('float32') / 255.0
     image = np.expand_dims(image, axis=0)
     return image
-
 
 def detect_spoof(frame):
     # Preprocess the frame
@@ -33,11 +31,9 @@ def detect_spoof(frame):
 
     return label
 
-
 @app.route('/')
 def index():
-    return render_template('s.html')
-
+    return render_template('index.html')
 
 def gen():
     cap = cv2.VideoCapture(0)
@@ -58,12 +54,10 @@ def gen():
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
     cap.release()
 
-
 @app.route('/video_feed')
 def video_feed():
     return Response(gen(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
